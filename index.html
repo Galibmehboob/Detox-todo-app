@@ -1,0 +1,1409 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#0b1020">
+  <meta name="description" content="Detox Life — Personal Productivity & Learning OS">
+  <link rel="manifest" href="./manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+  <link rel="apple-touch-icon" href="./icons/icon-192.png">
+  <title>Detox Life — Personal Productivity & Learning OS</title>
+  <style>
+    :root {
+      color-scheme: dark;
+      --bg: #0b1020;
+      --panel: #121b2e;
+      --panel2: #18243b;
+      --line: #2b3a55;
+      --text: #edf3ff;
+      --muted: #9eacc6;
+      --blue: #83aaff;
+      --mint: #66e0b0;
+      --violet: #c2a0ff;
+      --amber: #ffd18a;
+      --red: #ff777f;
+      --shadow: 0 18px 50px #0003
+    }
+
+    * {
+      box-sizing: border-box
+    }
+
+    body {
+      margin: 0;
+      background: radial-gradient(ellipse at 15% -10%, #1d3157 0, transparent 45%), var(--bg);
+      color: var(--text);
+      font: 15px/1.5 Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif
+    }
+
+    button,
+    input,
+    select,
+    textarea {
+      font: inherit
+    }
+
+    button {
+      cursor: pointer;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--panel2);
+      color: var(--text);
+      padding: 9px 12px
+    }
+
+    button:hover {
+      border-color: var(--blue)
+    }
+
+    button.primary {
+      background: var(--blue);
+      color: #091328;
+      border-color: var(--blue);
+      font-weight: 800
+    }
+
+    button.danger {
+      color: var(--red)
+    }
+
+    input,
+    select,
+    textarea {
+      background: #0c1425;
+      border: 1px solid var(--line);
+      color: var(--text);
+      padding: 10px;
+      border-radius: 10px;
+      width: 100%;
+      min-width: 0
+    }
+
+    label {
+      color: var(--muted);
+      font-size: .85rem;
+      display: block;
+      margin-bottom: 5px
+    }
+
+    .app {
+      max-width: 1300px;
+      margin: auto;
+      padding: 22px 18px 60px
+    }
+
+    .top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 22px
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 12px
+    }
+
+    .logo {
+      width: 44px;
+      height: 44px;
+      border-radius: 14px;
+      display: grid;
+      place-items: center;
+      background: linear-gradient(135deg, #83aaff, #66e0b0);
+      color: #081225;
+      font-weight: 1000;
+      font-size: 1.2rem
+    }
+
+    .eyebrow {
+      font-size: .72rem;
+      text-transform: uppercase;
+      letter-spacing: .15em;
+      color: var(--blue);
+      font-weight: 800
+    }
+
+    .brand h1 {
+      font-size: 1.45rem;
+      margin: 0
+    }
+
+    .muted {
+      color: var(--muted)
+    }
+
+    .small {
+      font-size: .82rem
+    }
+
+    .top-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap
+    }
+
+    .nav {
+      display: flex;
+      gap: 8px;
+      overflow: auto;
+      padding-bottom: 10px;
+      margin-bottom: 16px
+    }
+
+    .mobile-nav {
+      display: none;
+      margin-bottom: 12px
+    }
+
+    .mobile-nav label {
+      margin-bottom: 5px
+    }
+
+    .mobile-nav select {
+      min-height: 44px
+    }
+
+    .nav button {
+      white-space: nowrap
+    }
+
+    .nav button.active {
+      background: #25395b;
+      border-color: #5274ae;
+      color: #dce8ff
+    }
+
+    .view {
+      display: none
+    }
+
+    .view.active {
+      display: block
+    }
+
+    .grid {
+      display: grid;
+      gap: 14px
+    }
+
+    .grid.kpis {
+      grid-template-columns: repeat(4, minmax(0, 1fr));
+      margin-bottom: 14px
+    }
+
+    .grid.two {
+      grid-template-columns: 1.2fr .8fr
+    }
+
+    .grid.three {
+      grid-template-columns: repeat(3, minmax(0, 1fr))
+    }
+
+    .card {
+      background: linear-gradient(145deg, #141e32, #101829);
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      padding: 17px;
+      box-shadow: var(--shadow);
+      min-width: 0
+    }
+
+    .card h2,
+    .card h3 {
+      margin: 0 0 12px
+    }
+
+    .card h2 {
+      font-size: 1.05rem
+    }
+
+    .card h3 {
+      font-size: .93rem
+    }
+
+    .kpi {
+      font-size: 1.8rem;
+      font-weight: 850;
+      letter-spacing: -.04em
+    }
+
+    .kpi-label {
+      font-size: .82rem;
+      color: var(--muted)
+    }
+
+    .bar {
+      height: 10px;
+      background: #26344c;
+      border-radius: 30px;
+      overflow: hidden;
+      margin: 10px 0
+    }
+
+    .bar>span {
+      display: block;
+      height: 100%;
+      width: 0;
+      background: linear-gradient(90deg, var(--blue), var(--mint));
+      border-radius: 30px;
+      transition: width .25s
+    }
+
+    .bar.red>span {
+      background: var(--red)
+    }
+
+    .row {
+      display: flex;
+      gap: 10px;
+      align-items: center
+    }
+
+    .between {
+      justify-content: space-between
+    }
+
+    .wrap {
+      flex-wrap: wrap
+    }
+
+    .grow {
+      flex: 1;
+      min-width: 0
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      padding: 4px 8px;
+      border-radius: 99px;
+      background: #22324d;
+      color: #c9d9fa;
+      font-size: .75rem
+    }
+
+    .badge.green {
+      background: #153b32;
+      color: var(--mint)
+    }
+
+    .badge.amber {
+      background: #44351f;
+      color: var(--amber)
+    }
+
+    .badge.red {
+      background: #49262d;
+      color: #ffb2b6
+    }
+
+    .stack {
+      display: grid;
+      gap: 9px
+    }
+
+    .task {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      padding: 10px;
+      border: 1px solid transparent;
+      border-radius: 12px;
+      background: #ffffff04
+    }
+
+    .task:hover {
+      border-color: #344766
+    }
+
+    .task input[type=checkbox] {
+      width: 18px;
+      height: 18px;
+      accent-color: var(--mint);
+      margin-top: 3px;
+      flex: 0 0 auto
+    }
+
+    .task.done .task-title {
+      text-decoration: line-through;
+      color: #8291aa
+    }
+
+    .task-title {
+      color: var(--text);
+      font-size: .9rem
+    }
+
+    .task-meta {
+      color: var(--muted);
+      font-size: .77rem
+    }
+
+    .task .right {
+      margin-left: auto;
+      display: flex;
+      gap: 6px;
+      flex-shrink: 0
+    }
+
+    .iconbtn {
+      padding: 4px 7px;
+      font-size: .8rem
+    }
+
+    .phase {
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      overflow: hidden;
+      margin: 10px 0;
+      background: #ffffff03
+    }
+
+    .phase summary {
+      padding: 13px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      list-style: none
+    }
+
+    .phase summary::-webkit-details-marker {
+      display: none
+    }
+
+    .phase summary strong {
+      flex: 1
+    }
+
+    .phasebody {
+      padding: 0 12px 13px
+    }
+
+    .phasebody .task {
+      padding: 8px
+    }
+
+    .formgrid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px
+    }
+
+    .formgrid .full {
+      grid-column: 1/-1
+    }
+
+    .section-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 6px 0 14px
+    }
+
+    .section-head h2 {
+      margin: 0
+    }
+
+    .pillrow {
+      display: flex;
+      gap: 7px;
+      flex-wrap: wrap
+    }
+
+    .pillrow button {
+      font-size: .83rem
+    }
+
+    .pillrow button.active {
+      background: #2b3e60;
+      border-color: #6f94d7
+    }
+
+    .notice {
+      padding: 12px;
+      border: 1px dashed #405373;
+      border-radius: 12px;
+      color: var(--muted);
+      font-size: .85rem
+    }
+
+    .datebig {
+      font-size: 1.1rem;
+      font-weight: 800
+    }
+
+    .calendar {
+      display: grid;
+      grid-template-columns: repeat(7, minmax(0, 1fr));
+      gap: 5px
+    }
+
+    .day {
+      border: 1px solid var(--line);
+      border-radius: 10px;
+      min-height: 57px;
+      padding: 5px;
+      text-align: center;
+      font-size: .75rem;
+      background: #ffffff03
+    }
+
+    .day .dot {
+      width: 7px;
+      height: 7px;
+      background: var(--mint);
+      border-radius: 50%;
+      margin: 4px auto 0
+    }
+
+    .day.today {
+      border-color: var(--blue);
+      background: #83aaff14
+    }
+
+    .day.missed {
+      border-color: #8d3c45;
+      background: #ff777f10
+    }
+
+    .dayhead {
+      font-size: .68rem;
+      color: var(--muted);
+      text-align: center;
+      padding: 4px
+    }
+
+    .activity {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: center
+    }
+
+    .activity input {
+      width: 20px
+    }
+
+    .progress-ring {
+      width: 112px;
+      height: 112px;
+      border-radius: 50%;
+      display: grid;
+      place-items: center;
+      background: conic-gradient(var(--mint) var(--deg), #293750 0)
+    }
+
+    .progress-ring>div {
+      width: 88px;
+      height: 88px;
+      border-radius: 50%;
+      background: #121b2e;
+      display: grid;
+      place-items: center;
+      text-align: center
+    }
+
+    .empty {
+      color: var(--muted);
+      padding: 20px;
+      text-align: center
+    }
+
+    .late {
+      border-color: #a8414a !important;
+      background: #451f27 !important
+    }
+
+    .split {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      align-items: center
+    }
+
+    .chart {
+      width: 100%;
+      height: 180px;
+      display: block
+    }
+
+    .foot {
+      margin-top: 20px;
+      color: var(--muted);
+      font-size: .78rem;
+      text-align: center
+    }
+
+    a {
+      color: var(--blue)
+    }
+
+    #manual h3 {
+      margin: 18px 0 8px;
+      font-size: .96rem
+    }
+
+    #manual p,
+    #manual li {
+      color: #d6e0f3
+    }
+
+    #manual li {
+      margin: 5px 0
+    }
+
+    #manual ol,
+    #manual ul {
+      padding-left: 22px
+    }
+
+    @media print {
+      body {
+        background: #fff !important;
+        color: #111 !important;
+        color-scheme: light
+      }
+
+      .app {
+        max-width: none;
+        padding: 0
+      }
+
+      .top-actions,
+      .nav,
+      .mobile-nav,
+      #manual .section-head button {
+        display: none !important
+      }
+
+      .view {
+        display: none !important
+      }
+
+      #manual.view {
+        display: block !important
+      }
+
+      .card {
+        background: #fff !important;
+        color: #111 !important;
+        box-shadow: none;
+        border: 1px solid #ccc;
+        break-inside: avoid
+      }
+
+      .muted,
+      #manual p,
+      #manual li {
+        color: #333 !important
+      }
+
+      .notice {
+        color: #333 !important;
+        border-color: #aaa
+      }
+
+      .foot {
+        display: none
+      }
+    }
+
+    @media(max-width:650px) {
+      .nav {
+        display: none
+      }
+
+      .mobile-nav {
+        display: block
+      }
+
+      .top {
+        align-items: flex-start
+      }
+
+      .brand h1 {
+        font-size: 1.25rem
+      }
+
+      .top-actions {
+        width: 100%
+      }
+
+      .top-actions button {
+        flex: 1
+      }
+    }
+
+    @media(max-width:850px) {
+      .grid.kpis {
+        grid-template-columns: repeat(2, minmax(0, 1fr))
+      }
+
+      .grid.two,
+      .grid.three {
+        grid-template-columns: 1fr
+      }
+
+      .app {
+        padding: 14px 11px 40px
+      }
+
+      .card {
+        padding: 14px
+      }
+    }
+
+    @media(max-width:480px) {
+      .grid.kpis {
+        gap: 8px
+      }
+
+      .kpi {
+        font-size: 1.5rem
+      }
+
+      .formgrid {
+        grid-template-columns: 1fr
+      }
+
+      .formgrid .full {
+        grid-column: auto
+      }
+
+      .task .right {
+        flex-direction: column
+      }
+
+      .top-actions button {
+        padding: 8px
+      }
+
+      .day {
+        min-height: 48px;
+        padding: 3px
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+    <header class="top">
+      <div class="brand">
+        <div class="logo">D</div>
+        <div>
+          <div class="eyebrow">Personal productivity system</div>
+          <h1>Detox Life <span class="muted">/ Learning OS</span></h1>
+          <div class="muted small">Plan intentionally. Learn deeply. Build consistently.</div>
+        </div>
+      </div>
+      <div class="top-actions"><button id="installAppBtn" class="primary" type="button"
+          aria-describedby="installStatus">⇩ Install App</button><button id="exportBtn">Export backup</button><button
+          id="importBtn">Import backup</button><input id="importFile" type="file" accept="application/json" hidden><span
+          id="installStatus" class="muted small" role="status" aria-live="polite"
+          style="align-self:center"></span><button id="settingsBtn">Daily settings</button></div>
+    </header>
+    <div class="mobile-nav"><label for="mobileNavSelect">Navigate</label><select id="mobileNavSelect">
+        <option value="dashboard">Overview</option>
+        <option value="planner">Daily planner</option>
+        <option value="roadmap">Full-stack roadmap</option>
+        <option value="calendar">Streak & calendar</option>
+        <option value="settings">Settings</option>
+        <option value="manual">User manual</option>
+      </select></div>
+    <nav class="nav" id="nav"><button class="active" data-view="dashboard">Overview</button><button
+        data-view="planner">Daily planner</button><button data-view="roadmap">Full-stack roadmap</button><button
+        data-view="calendar">Streak & calendar</button><button data-view="settings">Settings</button><button
+        data-view="manual">User manual</button></nav>
+    <section id="dashboard" class="view active">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Your command center</div>
+          <h2 id="greeting">Today at a glance</h2>
+          <div class="muted small" id="todayLabel"></div>
+        </div>
+        <div class="row wrap"><button id="prevDay">← Previous</button><button id="todayBtn">Today</button><button
+            id="nextDay">Next →</button></div>
+      </div>
+      <div class="grid kpis">
+        <div class="card">
+          <div class="kpi" id="kDone">0%</div>
+          <div class="kpi-label">Daily completion</div>
+          <div class="bar"><span id="dailyBar"></span></div>
+        </div>
+        <div class="card">
+          <div class="kpi" id="kTasks">0/0</div>
+          <div class="kpi-label">Tasks completed</div>
+        </div>
+        <div class="card">
+          <div class="kpi" id="kHours">0h</div>
+          <div class="kpi-label">Planned workload</div>
+        </div>
+        <div class="card">
+          <div class="kpi" id="kStreak">0 🔥</div>
+          <div class="kpi-label">Current streak</div>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <div class="row between">
+            <h2>Today's plan</h2><span id="dayStatus" class="badge">Not started</span>
+          </div>
+          <div class="row wrap" style="margin-bottom:12px">
+            <div class="progress-ring" id="ring">
+              <div><strong id="ringPct">0%</strong><span class="small muted">complete</span></div>
+            </div>
+            <div class="grow">
+              <div id="daySummary" class="muted">Add tasks in Daily planner.</div>
+              <div class="bar"><span id="planBar"></span></div>
+              <div class="small muted" id="remainingText"></div>
+            </div>
+          </div>
+          <div id="todayTasks" class="stack"></div><button style="margin-top:12px" data-goto="planner">Manage today's
+            plan →</button>
+        </div>
+        <div class="card">
+          <h2>Daily essentials</h2>
+          <div class="stack" id="essentials"></div>
+          <div class="notice" style="margin-top:12px">Sleep target: 7–8 hours. Water target: 3 litres. Track these as
+            daily essentials; sleep is recorded as a target, not treated as a task to sacrifice.</div>
+        </div>
+      </div>
+      <div class="grid two" style="margin-top:14px">
+        <div class="card">
+          <h2>7-day consistency</h2><canvas id="weekChart" class="chart" width="600" height="180"></canvas>
+          <div class="small muted">Daily completion percentage. A day counts toward your streak at 80% or more.</div>
+        </div>
+        <div class="card">
+          <h2>Available time estimate</h2>
+          <div id="capacityPanel" class="stack"></div>
+          <div class="notice" style="margin-top:12px">Planner estimates use your available hours, busy blocks, task
+            priorities and durations. Keep a buffer for meals, travel and unexpected work.</div>
+        </div>
+      </div>
+    </section>
+    <section id="planner" class="view">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Plan around real life</div>
+          <h2>Daily planner</h2>
+          <div class="muted small">Add a task for today or schedule it for a future date. Tasks become active on their
+            planned date.</div>
+        </div>
+        <div class="row"><input type="date" id="planDate" style="width:auto"><button id="autoPlan"
+            class="primary">Auto-allocate time</button></div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <h2 id="plannerDateTitle">Create a task</h2>
+          <form id="taskForm">
+            <div class="formgrid">
+              <div class="full"><label for="taskName">Task name</label><input id="taskName" required maxlength="140"
+                  placeholder="e.g. Solve 3 JavaScript problems"></div>
+              <div><label for="taskCategory">Category</label><select id="taskCategory">
+                  <option>Coding practice</option>
+                  <option>Internship</option>
+                  <option>Business plan</option>
+                  <option>University study</option>
+                  <option>Exercise</option>
+                  <option>Meal & water</option>
+                  <option>Full-stack roadmap</option>
+                  <option>Personal</option>
+                </select></div>
+              <div><label for="taskPriority">Priority</label><select id="taskPriority">
+                  <option value="3">High</option>
+                  <option value="2" selected>Medium</option>
+                  <option value="1">Low</option>
+                </select></div>
+              <div><label for="taskDate">Scheduled date</label><input id="taskDate" type="date" required></div>
+              <div><label for="taskMinutes">Estimated duration (minutes)</label><input id="taskMinutes" type="number"
+                  min="5" max="720" step="5" value="45" required></div>
+              <div class="full"><label for="taskNotes">Notes / definition of done (optional)</label><textarea
+                  id="taskNotes" rows="2" placeholder="What does finished mean?"></textarea></div>
+              <div class="full row wrap"><button type="submit" class="primary" id="saveTaskBtn">Add task</button><button
+                  type="button" id="cancelEdit" hidden>Cancel edit</button><span class="muted small"
+                  id="editHint"></span></div>
+            </div>
+          </form>
+        </div>
+        <div class="card">
+          <h2>Time & commitments</h2>
+          <div class="formgrid">
+            <div><label for="availableHours">Available hours for selected day</label><input type="number"
+                id="availableHours" min="0" max="18" step=".5" value="8"></div>
+            <div><label for="bufferHours">Buffer / breaks (hours)</label><input type="number" id="bufferHours" min="0"
+                max="8" step=".25" value="1.5"></div>
+            <div class="full"><label for="busyName">Commitment name (class, appointment, busy time)</label><input
+                id="busyName" placeholder="e.g. University class"></div>
+            <div><label for="busyStart">From</label><input id="busyStart" type="time" value="10:00"></div>
+            <div><label for="busyEnd">Until</label><input id="busyEnd" type="time" value="13:00"></div>
+            <div class="full"><button id="addBusy">Add commitment / busy block</button></div>
+          </div>
+          <div id="busyList" class="stack" style="margin-top:12px"></div>
+          <div class="notice" style="margin-top:12px">Enter commitments in advance. Auto-allocation subtracts busy time
+            and your buffer, then schedules unfinished tasks by priority. It does not create calendar alarms.</div>
+        </div>
+      </div>
+      <div class="grid two" style="margin-top:14px">
+        <div class="card">
+          <div class="row between">
+            <h2>Scheduled tasks</h2><input id="taskSearch" placeholder="Search tasks…" style="max-width:230px">
+          </div>
+          <div class="pillrow" id="taskFilters"><button class="active" data-filter="all">All</button><button
+              data-filter="active">Active / due</button><button data-filter="open">Incomplete</button><button
+              data-filter="done">Completed</button><button data-filter="late">Overdue</button></div>
+          <div id="plannedTasks" class="stack" style="margin-top:12px"></div>
+        </div>
+        <div class="card">
+          <h2>Schedule summary</h2>
+          <div id="allocationSummary" class="stack"></div>
+          <div class="notice" style="margin-top:12px">If estimated task time exceeds available time, the app flags
+            overload in red. Reprioritize or move tasks to another date instead of pretending everything fits.</div>
+        </div>
+      </div>
+    </section>
+    <section id="roadmap" class="view">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Long-term growth</div>
+          <h2>Full-stack roadmap</h2>
+          <div class="muted small">Tick topics when you can explain and use them without copying a tutorial.</div>
+        </div>
+        <div class="row wrap"><input id="roadmapSearch" placeholder="Search topics…" style="max-width:250px"><select
+            id="roadmapFilter" style="width:auto">
+            <option value="all">All topics</option>
+            <option value="open">Incomplete</option>
+            <option value="done">Completed</option>
+          </select><button id="addRoadmapBtn" class="primary">+ Add topic/task</button></div>
+      </div>
+      <div class="grid kpis">
+        <div class="card">
+          <div class="kpi" id="roadDone">0%</div>
+          <div class="kpi-label">Roadmap completion</div>
+        </div>
+        <div class="card">
+          <div class="kpi" id="roadCount">0/0</div>
+          <div class="kpi-label">Topics checked</div>
+        </div>
+        <div class="card">
+          <div class="kpi" id="projectCount">0/0</div>
+          <div class="kpi-label">Phase projects completed</div>
+        </div>
+        <div class="card">
+          <div class="kpi" id="customCount">0</div>
+          <div class="kpi-label">Custom items</div>
+        </div>
+      </div>
+      <div id="roadmapList"></div>
+    </section>
+    <section id="calendar" class="view">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Consistency over perfection</div>
+          <h2>Streak & calendar</h2>
+          <div class="muted small">Streak increments when daily tasks reach 80% completion. Rest and schedule
+            realistically.</div>
+        </div>
+        <div class="row"><button id="monthPrev">←</button><strong id="monthTitle"></strong><button
+            id="monthNext">→</button></div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <h2>Monthly activity</h2>
+          <div class="calendar" id="calendarGrid"></div>
+          <div class="row wrap small muted" style="margin-top:10px"><span>🟢 Target met (80%+)</span><span>🔴 Missed
+              target</span><span>🔵 Today</span></div>
+        </div>
+        <div class="card">
+          <h2>Consistency stats</h2>
+          <div class="grid three">
+            <div>
+              <div class="kpi" id="bestStreak">0</div>
+              <div class="small muted">Best streak</div>
+            </div>
+            <div>
+              <div class="kpi" id="activeDays">0</div>
+              <div class="small muted">Days ≥80%</div>
+            </div>
+            <div>
+              <div class="kpi" id="monthAvg">0%</div>
+              <div class="small muted">Month average</div>
+            </div>
+          </div>
+          <div class="notice" style="margin-top:16px">Past days are not automatically marked as failures unless they had
+            planned tasks. You can review each day by choosing it in Daily planner.</div>
+        </div>
+      </div>
+    </section>
+    <section id="settings" class="view">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Tune your system</div>
+          <h2>Settings & habits</h2>
+          <div class="muted small">Targets are editable. This tool supports planning, not medical or nutritional advice.
+          </div>
+        </div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <h2>Daily capacity</h2>
+          <div class="formgrid">
+            <div><label>Usual available hours</label><input type="number" id="setHours" min="1" max="18" step=".5"
+                value="8"></div>
+            <div><label>Default buffer hours</label><input type="number" id="setBuffer" min="0" max="8" step=".25"
+                value="1.5"></div>
+            <div><label>Streak completion threshold (%)</label><input type="number" id="setThreshold" min="50" max="100"
+                step="5" value="80"></div>
+            <div><label>Sleep target (hours)</label><input type="number" id="setSleep" min="5" max="12" step=".5"
+                value="8"></div>
+            <div><label>Water target (litres)</label><input type="number" id="setWater" min=".5" max="8" step=".25"
+                value="3"></div>
+            <div><label>Default daily coding minutes</label><input type="number" id="setCoding" min="0" max="600"
+                step="15" value="90"></div>
+            <div class="full"><button id="saveSettings" class="primary">Save settings</button></div>
+          </div>
+        </div>
+        <div class="card">
+          <h2>Daily essentials tracker</h2>
+          <div class="formgrid">
+            <div><label>Sleep hours last night</label><input type="number" id="sleepActual" min="0" max="24" step=".25"
+                placeholder="e.g. 7.5"></div>
+            <div><label>Water consumed (litres)</label><input type="number" id="waterActual" min="0" max="15" step=".25"
+                placeholder="e.g. 1.5"></div>
+            <div class="full"><button id="saveEssentials" class="primary">Save today's essentials</button></div>
+          </div>
+          <div class="notice" style="margin-top:12px">Sleep target is 7–8 hours by default. The planner protects sleep
+            by keeping it outside your available work hours; don't use sleep time to make an overloaded plan fit.</div>
+          <h3 style="margin-top:18px">Meal tracking</h3>
+          <div id="mealChecks" class="stack"></div>
+        </div>
+      </div>
+      <div class="card" style="margin-top:14px">
+        <h2>Data & privacy</h2>
+        <p class="muted">Your data is stored locally in this browser profile. It is not uploaded to a server. Clearing
+          browser data can erase it; use Export backup regularly. Import replaces the current saved data after
+          confirmation.</p>
+        <div class="row wrap"><button id="exportBtn2">Export JSON backup</button><button id="importBtn2">Import JSON
+            backup</button><button id="clearData" class="danger">Clear all app data</button></div>
+      </div>
+    </section>
+
+    <section id="manual" class="view">
+      <div class="section-head">
+        <div>
+          <div class="eyebrow">Guidebook · Help & reference</div>
+          <h2>Detox Life — User Manual</h2>
+          <div class="muted small">A practical guide to setting up your workspace, planning your days, learning
+            full-stack development, and protecting your data.</div>
+        </div><button onclick="window.print()">Print / Save as PDF</button>
+      </div>
+      <div class="card" style="margin-bottom:14px">
+        <h2>Welcome to Detox Life</h2>
+        <p>Detox Life is a personal productivity and learning workspace. Use it to plan daily tasks, track routines,
+          work through the 10-phase Full-Stack Roadmap, and review your consistency. Your information is stored in this
+          browser on this device; the app does not automatically sync it to an online account.</p>
+        <div class="notice">Recommended first steps: (1) review Settings, (2) add today's tasks, (3) enter classes or
+          other busy commitments, (4) open the roadmap and mark your current learning progress, and (5) export a backup
+          after making important changes.</div>
+      </div>
+      <div class="grid two">
+        <div class="card">
+          <h2>Contents</h2>
+          <div class="stack"><a href="#manual-navigation">1. Navigation</a><a href="#manual-dashboard">2.
+              Dashboard</a><a href="#manual-planner">3. Daily Planner</a><a href="#manual-roadmap">4. Full-Stack
+              Roadmap</a><a href="#manual-streak">5. Streak & Calendar</a><a href="#manual-settings">6. Settings & Daily
+              Essentials</a><a href="#manual-backup">7. Saving, Export & Import</a><a href="#manual-tips">8. Recommended
+              workflow</a><a href="#manual-troubleshoot">9. Troubleshooting</a></div>
+        </div>
+        <div class="card">
+          <h2>Quick reference</h2>
+          <div class="stack">
+            <div class="split"><span>Daily streak target</span><strong>80% by default</strong></div>
+            <div class="split"><span>Default available time</span><strong>8 hours</strong></div>
+            <div class="split"><span>Default break buffer</span><strong>1.5 hours</strong></div>
+            <div class="split"><span>Default sleep target</span><strong>8 hours</strong></div>
+            <div class="split"><span>Default water target</span><strong>3 litres</strong></div>
+            <div class="small muted">These are editable defaults, not strict rules. Adjust them to fit your actual
+              schedule and needs.</div>
+          </div>
+        </div>
+      </div>
+      <div class="card" id="manual-navigation" style="margin-top:14px">
+        <h2>1. Navigation</h2>
+        <ul>
+          <li><strong>Desktop:</strong> use the navigation buttons near the top of the page.</li>
+          <li><strong>Phone:</strong> open the Navigate dropdown and choose the section you want.</li>
+          <li><strong>Overview:</strong> your daily snapshot and progress.</li>
+          <li><strong>Daily Planner:</strong> create and manage dated tasks and busy blocks.</li>
+          <li><strong>Full-stack Roadmap:</strong> track topics and projects across 10 phases and customize the roadmap.
+          </li>
+          <li><strong>Streak & Calendar:</strong> inspect monthly consistency and select a date to review its tasks.
+          </li>
+          <li><strong>Settings:</strong> adjust planning targets, track sleep/water/meals, export or import data.</li>
+          <li><strong>User Manual:</strong> return to this guide whenever needed.</li>
+        </ul>
+      </div>
+      <div class="card" id="manual-dashboard" style="margin-top:14px">
+        <h2>2. Dashboard / Overview</h2>
+        <p>The Overview summarizes the selected day. It shows daily completion, completed tasks, planned workload,
+          current streak, today's task list, daily essentials, a 7-day consistency chart, and available-time estimates.
+        </p>
+        <ul>
+          <li>Use <strong>Previous</strong> and <strong>Next</strong> to inspect another date; choose
+            <strong>Today</strong> to return to the current date.
+          </li>
+          <li>Use <strong>Manage today's plan</strong> to jump to the planner.</li>
+          <li>Completion percentage is based on the selected day's planned tasks. If no tasks exist for that day, the
+            app displays 0% rather than assuming the day is complete.</li>
+          <li>The capacity panel estimates available time after busy blocks and break buffer. If unfinished tasks exceed
+            usable time, treat the red warning as a prompt to reprioritize.</li>
+        </ul>
+      </div>
+      <div class="card" id="manual-planner" style="margin-top:14px">
+        <h2>3. Daily Planner — step by step</h2>
+        <ol>
+          <li>Open <strong>Daily Planner</strong> and select the date.</li>
+          <li>Enter a task name, category, priority, date, estimated minutes, and optional notes.</li>
+          <li>Choose <strong>Add task</strong>. The task appears in the scheduled-task list.</li>
+          <li>Use <strong>Edit</strong> to change a task. Use the delete (×) control to remove it after confirming.</li>
+          <li>Tick the checkbox when the task is complete. Changes are saved automatically.</li>
+          <li>Use the search box and filters to find tasks by name or status, including overdue tasks.</li>
+          <li>Enter the day's available hours and break/buffer hours. These values are saved for that date.</li>
+          <li>Add busy blocks for classes, appointments, or other commitments by entering a name and start/end time.
+            Remove a block if it changes.</li>
+        </ol>
+        <p><strong>Planning logic:</strong> the capacity estimate subtracts busy-block duration and your break buffer
+          from available hours. It compares that usable time with scheduled work. It is a planning estimate, not a
+          calendar alarm or automatic external calendar integration. You still decide which tasks to do and when.</p>
+        <p><strong>Deadline behavior:</strong> tasks are associated with a date. An incomplete task dated before today
+          is marked overdue. Set the correct date when creating or editing tasks.</p>
+      </div>
+      <div class="card" id="manual-roadmap" style="margin-top:14px">
+        <h2>4. Full-Stack Roadmap — learn and customize</h2>
+        <p>The roadmap contains 10 phases, from JavaScript Fundamentals through Advanced Engineering & System Design.
+          Each phase contains topic sections and a project. Use it as a checklist of concepts you can explain and
+          apply—not just videos you have watched.</p>
+        <h3>Mark learning progress</h3>
+        <ol>
+          <li>Open <strong>Full-stack roadmap</strong>.</li>
+          <li>Expand a phase by selecting its header.</li>
+          <li>Tick a topic when you understand it well enough to explain it and use it in code.</li>
+          <li>Tick the phase project when you have completed the project to your own acceptable standard.</li>
+          <li>Use search to find a topic and the filter to show all, incomplete, or completed items.</li>
+        </ol>
+        <h3>Customize any phase</h3>
+        <ul>
+          <li>Use <strong>+ Add topic/task</strong> to add a topic, a new section, or a project to a chosen phase.</li>
+          <li>Use a section's add/edit controls to create or rename sections and add/edit topics.</li>
+          <li>Use the phase customization control to edit a phase title and its short description.</li>
+          <li>Edit the phase project name when your project scope changes.</li>
+          <li>Custom topics and sections are saved along with their completion state. Adding items changes the total
+            used for progress calculations.</li>
+        </ul>
+        <div class="notice">Tip: add missing subjects to the relevant phase instead of deleting the original roadmap.
+          Export a backup before major restructuring. A topic checkbox records your progress; it does not automatically
+          validate your knowledge.</div>
+      </div>
+      <div class="card" id="manual-streak" style="margin-top:14px">
+        <h2>5. Streak & Calendar</h2>
+        <ul>
+          <li>Use the arrows to move between months.</li>
+          <li>Select a day in the calendar to open that date in Daily Planner.</li>
+          <li>A day qualifies for the streak when it has planned tasks and reaches the configured completion threshold
+            (80% by default).</li>
+          <li>The app displays current and best streak information based on saved daily task records.</li>
+          <li>Days with no planned tasks are not automatically treated as missed days.</li>
+        </ul>
+        <p>Streaks are intended to encourage consistency, not guilt. If a day becomes unrealistic, adjust the plan and
+          continue the next day.</p>
+      </div>
+      <div class="card" id="manual-settings" style="margin-top:14px">
+        <h2>6. Settings & Daily Essentials</h2>
+        <ul>
+          <li><strong>Usual available hours:</strong> default daily time capacity used when a date has no custom value.
+          </li>
+          <li><strong>Default buffer hours:</strong> time reserved for breaks and unexpected interruptions.</li>
+          <li><strong>Streak threshold:</strong> the completion percentage required for a day to qualify.</li>
+          <li><strong>Sleep and water targets:</strong> editable tracking targets.</li>
+          <li><strong>Default daily coding minutes:</strong> a planning preference for coding practice.</li>
+          <li>Select <strong>Save settings</strong> after changing the settings form.</li>
+          <li>In Daily Essentials, record actual sleep hours and water consumed for the selected day, then save. Check
+            the meal boxes as you complete them.</li>
+        </ul>
+        <p>Sleep, water, and meal tracking are separate from task completion. The default values are personal planning
+          targets, not medical advice.</p>
+      </div>
+      <div class="card" id="manual-backup" style="margin-top:14px">
+        <h2>7. Saving, Export & Import</h2>
+        <h3>Automatic saving</h3>
+        <p>Most edits are saved to browser localStorage when you add, edit, delete, or check an item. Reloading the page
+          should retain saved data in the same browser profile, as long as browser storage remains available.</p>
+        <h3>Export a backup</h3>
+        <ol>
+          <li>Choose <strong>Export backup</strong> at the top or in Settings.</li>
+          <li>Your browser downloads a JSON backup file. Keep it somewhere safe, such as a personal folder or cloud
+            drive.</li>
+          <li>Export again after significant roadmap edits or at regular intervals.</li>
+        </ol>
+        <h3>Import a backup</h3>
+        <ol>
+          <li>Choose <strong>Import backup</strong> and select a Detox Life JSON backup.</li>
+          <li>Read the confirmation prompt carefully. Import replaces the current saved app data.</li>
+          <li>After import, check the roadmap, tasks, and settings to confirm the expected information is present.</li>
+        </ol>
+        <div class="notice">Important: localStorage is tied to the browser profile and device. It is not cloud sync.
+          Private/incognito sessions, clearing browser/site data, changing browsers, or using another device can make
+          the saved data unavailable. Export backups before clearing data or moving devices. The Clear all app data
+          button is destructive and cannot be undone without a backup.</div>
+      </div>
+      <div class="card" id="manual-tips" style="margin-top:14px">
+        <h2>8. Recommended daily workflow</h2>
+        <ol>
+          <li><strong>Morning:</strong> check the date, add your priorities, and enter classes or other commitments.
+          </li>
+          <li><strong>Plan realistically:</strong> set available hours and break buffer, then check for overload.</li>
+          <li><strong>Study:</strong> choose a small number of roadmap topics and practice them in code.</li>
+          <li><strong>Build:</strong> connect learning topics to the current phase project where possible.</li>
+          <li><strong>During the day:</strong> mark tasks complete and adjust estimates when plans change.</li>
+          <li><strong>Evening:</strong> update sleep/water/meal tracking, review completion, and prepare tomorrow's
+            tasks.</li>
+          <li><strong>Weekly:</strong> review the calendar and export a backup.</li>
+        </ol>
+        <p>Prefer sustainable progress over filling every available hour. Leave room for breaks, unexpected tasks, and
+          sleep.</p>
+      </div>
+      <div class="card" id="manual-troubleshoot" style="margin-top:14px">
+        <h2>9. Troubleshooting</h2>
+        <h3>My data disappeared</h3>
+        <p>Check that you opened the same HTML file in the same browser profile. If browser storage was cleared, restore
+          from a previously exported JSON backup. The app cannot recover data that was deleted without a backup.</p>
+        <h3>Changes do not survive a reload</h3>
+        <p>Make sure browser storage is enabled and the page is not running in a restricted private session. Try
+          exporting a backup, then reopen the HTML file in a normal browser window. If storage is full or blocked, the
+          app may show a save warning.</p>
+        <h3>Import did not work</h3>
+        <p>Use a JSON backup exported from Detox Life. Confirm that you selected the correct file. Import replaces
+          current data only after you approve the confirmation prompt.</p>
+        <h3>My time estimate looks wrong</h3>
+        <p>Check the selected date, available hours, buffer hours, and busy-block start/end times. Make sure task
+          durations are entered in minutes and that tasks are assigned to the intended date.</p>
+        <h3>I cannot find a roadmap item</h3>
+        <p>Clear the roadmap search box and select the “All topics” filter. The item may be in another phase or section.
+        </p>
+        <p class="muted small">End of manual · Detox Life is a single-file productivity tool. Use backups to protect
+          your records.</p>
+      </div>
+    </section>
+
+    <div class="foot">Detox Life · Single-file local web app · Data stays in this browser unless you export it.</div>
+  </div>
+  <div id="modal"
+    style="display:none;position:fixed;inset:0;background:#050914c9;z-index:20;overflow:auto;padding:20px">
+    <div class="card" style="max-width:520px;margin:8vh auto">
+      <div class="row between">
+        <h2 id="modalTitle">Add item</h2><button id="modalClose">✕</button>
+      </div>
+      <div id="modalBody"></div>
+    </div>
+  </div>
+  <script>
+    const KEY = 'detox-life-os-v1';
+    const todayISO = () => {const d = new Date(); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')};
+    const dateOffset = (iso, n) => {let d = new Date(iso + 'T12:00:00'); d.setDate(d.getDate() + n); return d.getFullYear() + '-' + String(d.getMonth() + 1).padStart(2, '0') + '-' + String(d.getDate()).padStart(2, '0')};
+    const fmtDate = iso => new Date(iso + 'T12:00:00').toLocaleDateString(undefined, {weekday: 'long', month: 'short', day: 'numeric', year: 'numeric'});
+    const esc = s => String(s ?? '').replace(/[&<>"']/g, c => ({'&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'}[c]));
+    const uid = () => Math.random().toString(36).slice(2, 10);
+    const defaults = () => ({
+      settings: {hours: 8, buffer: 1.5, threshold: 80, sleep: 8, water: 3, coding: 90},
+      tasks: [], busy: {}, daily: {}, roadmapCustom: [],
+      roadmap: [
+        {phase: 1, title: 'Phase 1 — JavaScript Fundamentals', sub: 'Start here — programming foundations', groups: [{title: 'JavaScript Fundamentals', tasks: ['Variables: let, const, var', 'Data types', 'Operators', 'Type conversion and coercion', 'Truthy and falsy values', 'Conditions: if, else, switch', 'Ternary operator', 'Loops: for, while, for...of', 'Functions and arrow functions', 'Parameters, arguments and return', 'Scope', 'Arrays', 'Array methods: map, filter, reduce, find, sort', 'Objects and nested objects', 'Destructuring', 'Spread and rest operators', 'String and Number methods', 'JSON', 'Date and Math', 'Set and Map', 'Basic error handling', 'Problem-solving practice']}], project: 'Calculator, Student Grade Calculator, Number Guessing Game, Expense Tracker, Shopping Cart Calculator'},
+        {phase: 2, title: 'Phase 2 — Intermediate & Advanced JavaScript', sub: 'DOM, async programming and deeper concepts', groups: [{title: 'Intermediate & Advanced JavaScript', tasks: ['DOM manipulation', 'Event listeners and event delegation', 'Form handling and validation', 'LocalStorage and SessionStorage', 'Callbacks', 'Promises', 'async / await', 'Promise methods', 'Fetch API', 'HTTP request and response', 'Event loop and microtask queue', 'Execution context and hoisting', 'Closures and lexical scope', 'this, call, apply and bind', 'Prototypes and prototype chain', 'Classes and inheritance', 'ES Modules', 'Error handling', 'Recursion', 'Big O notation', 'Stack, Queue, Map and Set', 'Searching and sorting', 'Debouncing and throttling']}], project: 'API-based application'},
+        {phase: 3, title: 'Phase 3 — TypeScript & React', sub: 'Typed, component-based frontend', groups: [{title: 'TypeScript', tasks: ['Primitive types and type inference', 'Arrays, objects and tuples', 'Type aliases and interfaces', 'Union and intersection types', 'Type narrowing and type guards', 'Functions and generics', 'keyof and typeof', 'Utility types', 'Discriminated unions', 'Async functions and API response typing', 'Strict mode and tsconfig']}, {title: 'React', tasks: ['JSX and components', 'Props and component composition', 'Conditional rendering and lists', 'Events and forms', 'useState', 'useEffect', 'useRef', 'useContext', 'useReducer', 'Custom hooks', 'State management', 'TanStack Query', 'React Hook Form and Zod', 'useMemo and useCallback', 'Performance optimization', 'Error boundaries and lazy loading', 'Accessibility']}], project: 'E-commerce frontend with TypeScript'},
+        {phase: 4, title: 'Phase 4 — Advanced Next.js', sub: 'App Router and production applications', groups: [{title: 'Advanced Next.js', tasks: ['Next.js App Router', 'File-based routing', 'Nested and dynamic routes', 'Layouts and Route Groups', 'Loading, Error and Not Found UI', 'Server Components', 'Client Components', 'Rendering and hydration', 'Static and dynamic rendering', 'Data fetching', 'Caching and revalidation', 'Server Actions / Server Functions', 'Route Handlers', 'Authentication and protected routes', 'Forms and server-side validation', 'File uploads', 'Metadata and SEO', 'Image optimization', 'Performance optimization', 'Production deployment']}], project: 'Full-Stack SaaS Dashboard'},
+        {phase: 5, title: 'Phase 5 — Backend with Node.js & Express.js', sub: 'Build APIs and server-side logic', groups: [{title: 'Backend with Node.js & Express.js', tasks: ['Node.js runtime fundamentals', 'npm and package management', 'CommonJS and ES Modules', 'File System and Path modules', 'Environment variables', 'Event loop and asynchronous I/O', 'Error handling and logging', 'HTTP fundamentals', 'REST API principles', 'HTTP methods and status codes', 'Express application setup', 'Routing and route parameters', 'Controllers and services', 'Middleware', 'Request validation', 'Centralized error handling', 'CORS', 'Pagination, search and filtering', 'File uploads', 'API documentation', 'API testing with Postman']}], project: 'Task Management REST API'},
+        {phase: 6, title: 'Phase 6 — Database & ORM', sub: 'SQL, data modeling and persistence', groups: [{title: 'Database & ORM', tasks: ['Database fundamentals', 'SQL syntax and CRUD', 'PostgreSQL', 'Primary and Foreign Keys', 'Database relationships', 'Joins and subqueries', 'GROUP BY and aggregate functions', 'CTEs', 'Database normalization', 'Indexes and query optimization', 'Transactions and ACID', 'Isolation levels', 'Prisma ORM', 'Drizzle ORM fundamentals', 'Schema and migrations', 'Database seeding', 'MongoDB', 'MongoDB aggregation and indexing', 'SQL vs NoSQL']}], project: 'Inventory and order management database'},
+        {phase: 7, title: 'Phase 7 — Authentication, Authorization & Security', sub: 'Protect users, data and APIs', groups: [{title: 'Authentication, Authorization & Security', tasks: ['Authentication vs Authorization', 'Password hashing', 'Session-based authentication', 'JWT and access/refresh tokens', 'Cookies: HttpOnly, Secure, SameSite', 'OAuth 2.0 and OpenID Connect basics', 'Role-Based Access Control (RBAC)', 'Permissions and resource ownership', 'Server-side authorization', 'Input validation and sanitization', 'SQL Injection', 'XSS and CSRF', 'CORS and rate limiting', 'Secure file uploads', 'Secrets management', 'OWASP Top 10']}], project: 'Secure system with admin, seller and customer roles'},
+        {phase: 8, title: 'Phase 8 — Advanced Backend with NestJS', sub: 'Structured TypeScript backend', groups: [{title: 'Advanced Backend with NestJS', tasks: ['NestJS fundamentals', 'Modules, Controllers and Providers', 'Dependency Injection', 'DTOs and validation', 'Pipes, Guards and Interceptors', 'Exception Filters', 'Custom Decorators', 'Authentication and Authorization', 'Database integration', 'Swagger / OpenAPI', 'Background jobs and queues', 'WebSockets', 'Caching and logging', 'Unit and integration testing', 'Modular architecture', 'Microservices fundamentals']}], project: 'Modular backend application'},
+        {phase: 9, title: 'Phase 9 — DevOps, Testing & Deployment', sub: 'Ship and maintain production software', groups: [{title: 'DevOps, Testing & Deployment', tasks: ['Linux and command line', 'Advanced Git and GitHub workflows', 'Unit testing', 'Integration testing', 'End-to-end testing', 'Jest / Vitest / Playwright', 'Docker and Docker Compose', 'CI/CD pipelines', 'Environment and secrets management', 'Cloud deployment', 'Domain, HTTPS and production configuration', 'Logging, monitoring and error tracking', 'Database backup and recovery']}], project: 'Application with automated testing and deployment'},
+        {phase: 10, title: 'Phase 10 — Advanced Engineering & System Design', sub: 'Scalable, maintainable systems', groups: [{title: 'Advanced Engineering & System Design', tasks: ['System Design fundamentals', 'SOLID principles and design patterns', 'Clean Architecture and Domain-Driven Design', 'Monolith vs Microservices', 'Event-driven architecture', 'Redis and caching strategies', 'Message queues and background jobs', 'WebSockets and real-time systems', 'Multi-tenant SaaS architecture', 'Database and API performance optimization', 'Distributed systems fundamentals', 'LLM APIs, embeddings and vector databases', 'Scalability, load balancing and CDN']}], project: 'Production-grade SaaS application'}
+      ]
+    });
+    let state; try {state = JSON.parse(localStorage.getItem(KEY) || localStorage.getItem('dayforge-os-v1')) || defaults()} catch (e) {state = defaults()}
+    const ensure = () => {
+      let d = defaults(); state.settings = {...d.settings, ...state.settings}; for (let k of ['tasks', 'busy', 'daily', 'roadmapCustom']) if (!state[k]) state[k] = d[k]; state.roadDone = state.roadDone || {};
+      // Migrate the older Dayforge roadmap to the new 10-phase Detox Life roadmap once, keeping matching completion marks where possible.
+      if (!Array.isArray(state.roadmap) || state.roadmap.length !== 10 || !String(state.roadmap[0]?.title || '').includes('Phase 1 — JavaScript Fundamentals')) {const old = Array.isArray(state.roadmap) ? state.roadmap : []; const completedTitles = new Set(); old.forEach(p => {(p.groups || []).forEach(g => (g.tasks || []).forEach(t => {if (state.roadDone[`r-${p.phase}-${g.title}-${t}`]) completedTitles.add(String(t).toLowerCase())})); if (state.roadDone[`project-${p.phase}`]) completedTitles.add('project:' + String(p.project || '').toLowerCase())}); state.roadmap = d.roadmap; state.roadmap.forEach(p => {p.id = 'phase-' + p.phase; p.groups.forEach((g, gi) => {g.id = 'group-' + p.phase + '-' + gi; g.tasks = g.tasks.map((t, ti) => ({id: 'topic-' + p.phase + '-' + gi + '-' + ti + '-' + uid(), title: t, done: completedTitles.has(String(t).toLowerCase())}))}); p.projectId = 'project-' + p.phase; if (completedTitles.has('project:' + String(p.project).toLowerCase())) state.roadDone[p.projectId] = true})}
+      state.roadmap.forEach((p, pi) => {p.id = p.id || 'phase-' + p.phase; p.groups = p.groups || []; p.groups.forEach((g, gi) => {g.id = g.id || 'group-' + p.phase + '-' + gi; g.tasks = (g.tasks || []).map((t, ti) => typeof t === 'string' ? {id: 'topic-' + p.phase + '-' + gi + '-' + ti + '-' + uid(), title: t} : ({...t, id: t.id || 'topic-' + p.phase + '-' + gi + '-' + ti + '-' + uid()}))}); p.projectId = p.projectId || 'project-' + p.phase});
+    };
+    ensure();
+    let selectedDate = todayISO(), editingTask = null, taskFilter = 'all', calendarMonth = new Date();
+    const $ = id => document.getElementById(id);
+    function save() {try {localStorage.setItem(KEY, JSON.stringify(state)); return true} catch (e) {alert('Could not save. Browser storage may be full or disabled. Export a backup and check browser settings.'); return false} }
+    function dayData(date) {if (!state.daily[date]) state.daily[date] = {sleep: '', water: 0, meals: {Breakfast: false, Lunch: false, Dinner: false, Snacks: false}, completed: {}, allocations: {}}; return state.daily[date]}
+    function tasksFor(date) {return state.tasks.filter(t => t.date === date)}
+    function taskComplete(t) {return !!dayData(t.date).completed[t.id]}
+    function mins(n) {n = Number(n) || 0; return Math.round(n) + ' min'}
+    function duration(n) {n = Number(n) || 0; return n >= 60 ? (n / 60).toFixed(n % 60 === 0 ? 0 : 1) + 'h' : n + 'm'}
+    function dailyStats(date) {let ts = tasksFor(date), done = ts.filter(taskComplete).length; let essentials = dayData(date); let total = ts.length, percent = total ? Math.round(done / total * 100) : 0; return {ts, done, total, percent, essentials}}
+    function streakData() {let days = Object.keys(state.daily).sort(), qualified = days.filter(d => {let s = dailyStats(d); return s.total > 0 && s.percent >= state.settings.threshold}); let current = 0, day = todayISO(); if (qualified.includes(day) || qualified.includes(dateOffset(day, -1))) {let cur = qualified.includes(day) ? day : dateOffset(day, -1); while (qualified.includes(cur)) {current++; cur = dateOffset(cur, -1)} } let best = 0, run = 0, prev = null; for (let d of qualified) {run = prev && dateOffset(prev, 1) === d ? run + 1 : 1; best = Math.max(best, run); prev = d} return {current, best, qualified}}
+    function setView(v) {document.querySelectorAll('.view').forEach(x => x.classList.toggle('active', x.id === v)); document.querySelectorAll('#nav button').forEach(x => x.classList.toggle('active', x.dataset.view === v)); if ($('mobileNavSelect')) $('mobileNavSelect').value = v; if (v === 'roadmap') renderRoadmap(); if (v === 'calendar') renderCalendar(); if (v === 'planner') renderPlanner()}
+    document.querySelectorAll('#nav button').forEach(b => b.onclick = () => setView(b.dataset.view)); $('mobileNavSelect').onchange = e => setView(e.target.value); document.querySelectorAll('[data-goto]').forEach(b => b.onclick = () => setView(b.dataset.goto));
+    function renderTask(t, mode = 'planner') {let done = taskComplete(t), late = t.date < todayISO() && !done, active = t.date <= todayISO(); let el = document.createElement('div'); el.className = 'task' + (done ? ' done' : '') + (late ? ' late' : ''); el.innerHTML = `<input type="checkbox" ${done ? 'checked' : ''} aria-label="Complete task"><div class="grow"><div class="task-title">${esc(t.name)}</div><div class="task-meta">${esc(t.category)} · ${duration(t.minutes)} · ${['Low', 'Medium', 'High'][Number(t.priority) - 1] || 'Medium'} priority · ${esc(t.date)} ${active ? '' : '· Scheduled'}</div>${t.notes ? `<div class="task-meta">${esc(t.notes)}</div>` : ''}${late ? '<span class="badge red">Overdue</span>' : ''}</div><div class="right"><button class="iconbtn" data-edit>Edit</button><button class="iconbtn danger" data-delete>×</button></div>`; el.querySelector('input').onchange = e => {dayData(t.date).completed[t.id] = e.target.checked; save(); renderAll()}; el.querySelector('[data-edit]').onclick = () => editTask(t); el.querySelector('[data-delete]').onclick = () => {if (confirm('Delete this task?')) {state.tasks = state.tasks.filter(x => x.id !== t.id); save(); renderAll()} }; return el}
+    function renderDashboard() {
+      let s = dailyStats(selectedDate); $('greeting').textContent = selectedDate === todayISO() ? 'Today at a glance' : 'Plan for ' + fmtDate(selectedDate); $('todayLabel').textContent = fmtDate(selectedDate); $('kDone').textContent = s.percent + '%'; $('dailyBar').style.width = s.percent + '%'; $('kTasks').textContent = s.done + '/' + s.total; $('kHours').textContent = duration(s.ts.reduce((a, t) => a + Number(t.minutes), 0)); $('kStreak').textContent = streakData().current + ' 🔥'; $('ringPct').textContent = s.percent + '%'; $('ring').style.background = `conic-gradient(var(--mint) ${s.percent * 3.6}deg,#293750 0)`; $('planBar').style.width = s.percent + '%'; $('daySummary').textContent = s.total ? `${s.done} completed · ${s.total - s.done} remaining` : 'No tasks planned yet.'; $('remainingText').textContent = s.total ? `${s.ts.filter(t => !taskComplete(t)).reduce((a, t) => a + Number(t.minutes), 0)} minutes of planned work remaining` : 'Add tasks in Daily planner.'; $('dayStatus').className = 'badge ' + (s.percent >= state.settings.threshold && s.total ? 'green' : s.percent > 0 ? 'amber' : ''); $('dayStatus').textContent = s.total ? (s.percent >= state.settings.threshold ? 'Target met' : s.percent + '% complete') : 'Not started'; $('todayTasks').replaceChildren(); s.ts.slice().sort((a, b) => b.priority - a.priority).slice(0, 6).forEach(t => $('todayTasks').append(renderTask(t))); if (!s.ts.length) $('todayTasks').innerHTML = '<div class="empty">Nothing scheduled. Add a task to start.</div>';
+      let d = s.essentials; $('essentials').innerHTML = `<div class="split"><span>Sleep</span><strong>${d.sleep === '' ? '—' : d.sleep + 'h'} / ${state.settings.sleep}h</strong></div><div class="bar"><span style="width:${Math.min(100, (Number(d.sleep) || 0) / state.settings.sleep * 100)}%"></span></div><div class="split"><span>Water</span><strong>${Number(d.water) || 0} / ${state.settings.water} L</strong></div><div class="bar"><span style="width:${Math.min(100, (Number(d.water) || 0) / state.settings.water * 100)}%"></span></div><div class="split"><span>Meals checked</span><strong>${Object.values(d.meals).filter(Boolean).length}/4</strong></div><div class="small muted">Sleep and hydration are tracked separately from task completion.</div>`;
+      drawWeekChart(); let planMins = s.ts.filter(t => !taskComplete(t)).reduce((a, t) => a + Number(t.minutes), 0), busy = (state.busy[selectedDate] || []).reduce((a, b) => a + Math.max(0, timeMinutes(b.end) - timeMinutes(b.start)), 0), available = Number(state.daily[selectedDate]?.availableHours ?? state.settings.hours) * 60, buffer = Number(state.daily[selectedDate]?.bufferHours ?? state.settings.buffer) * 60, usable = Math.max(0, available - busy - buffer); $('capacityPanel').innerHTML = `<div class="split"><span>Available time</span><strong>${duration(available)}</strong></div><div class="split"><span>Busy blocks</span><strong>${duration(busy)}</strong></div><div class="split"><span>Break / buffer</span><strong>${duration(buffer)}</strong></div><div class="split"><span>Usable work time</span><strong>${duration(usable)}</strong></div><div class="split"><span>Unfinished tasks</span><strong>${duration(planMins)}</strong></div><div class="bar ${planMins > usable ? 'red' : ''}"><span style="width:${usable ? Math.min(100, planMins / usable * 100) : planMins ? 100 : 0}%"></span></div><span class="badge ${planMins > usable ? 'red' : 'green'}">${planMins > usable ? 'Overloaded by ' + duration(planMins - usable) : duration(usable - planMins) + ' capacity left'}</span>`
+    }
+    function drawWeekChart() {let c = $('weekChart'), ctx = c.getContext('2d'), w = c.width, h = c.height; ctx.clearRect(0, 0, w, h); ctx.strokeStyle = '#2b3a55'; ctx.fillStyle = '#9eacc6'; ctx.font = '13px system-ui'; for (let i = 0; i <= 4; i++) {let y = 12 + (h - 38) * i / 4; ctx.beginPath(); ctx.moveTo(36, y); ctx.lineTo(w - 8, y); ctx.stroke(); ctx.fillText((100 - i * 25) + '%', 2, y + 4)} let dates = Array.from({length: 7}, (_, i) => dateOffset(todayISO(), i - 6)); let bw = (w - 58) / 7; dates.forEach((d, i) => {let s = dailyStats(d), barH = (h - 42) * s.percent / 100, x = 40 + i * bw; ctx.fillStyle = s.percent >= state.settings.threshold ? '#66e0b0' : '#83aaff'; ctx.fillRect(x, h - 28 - barH, bw * .58, barH); ctx.fillStyle = '#9eacc6'; ctx.fillText(d.slice(8), x, h - 8)})}
+    function timeMinutes(s) {if (!s) return 0; let [h, m] = s.split(':').map(Number); return h * 60 + m}
+    function renderPlanner() {$('planDate').value = selectedDate; $('taskDate').value = editingTask ? editingTask.date : selectedDate; $('plannerDateTitle').textContent = 'Tasks for ' + fmtDate(selectedDate); $('availableHours').value = state.daily[selectedDate]?.availableHours ?? state.settings.hours; $('bufferHours').value = state.daily[selectedDate]?.bufferHours ?? state.settings.buffer; renderBusy(); let q = $('taskSearch').value.toLowerCase(), ts = tasksFor(selectedDate).filter(t => t.name.toLowerCase().includes(q) || t.category.toLowerCase().includes(q)); ts = ts.filter(t => taskFilter === 'all' || (taskFilter === 'active' ? t.date <= todayISO() : taskFilter === 'open' ? !taskComplete(t) : taskFilter === 'done' ? taskComplete(t) : t.date < todayISO() && !taskComplete(t))); $('plannedTasks').replaceChildren(); ts.sort((a, b) => b.priority - a.priority).forEach(t => $('plannedTasks').append(renderTask(t))); if (!ts.length) $('plannedTasks').innerHTML = '<div class="empty">No tasks match this filter.</div>'; let total = tasksFor(selectedDate).reduce((a, t) => a + Number(t.minutes), 0), done = tasksFor(selectedDate).filter(taskComplete).reduce((a, t) => a + Number(t.minutes), 0), busy = (state.busy[selectedDate] || []).reduce((a, b) => a + Math.max(0, timeMinutes(b.end) - timeMinutes(b.start)), 0), avail = Number($('availableHours').value) * 60, buffer = Number($('bufferHours').value) * 60, usable = Math.max(0, avail - busy - buffer); $('allocationSummary').innerHTML = `<div class="split"><span>Scheduled work</span><strong>${duration(total)}</strong></div><div class="split"><span>Completed work estimate</span><strong>${duration(done)}</strong></div><div class="split"><span>Busy commitments</span><strong>${duration(busy)}</strong></div><div class="split"><span>Net capacity after buffer</span><strong>${duration(usable)}</strong></div><div class="bar ${total > usable ? 'red' : ''}"><span style="width:${usable ? Math.min(100, total / usable * 100) : total ? 100 : 0}%"></span></div><span class="badge ${total > usable ? 'red' : 'green'}">${total > usable ? 'Over capacity — move or reduce tasks' : 'Plan fits estimated capacity'}</span>`}
+    function renderBusy() {let list = $('busyList'); list.replaceChildren(); (state.busy[selectedDate] || []).forEach((b, i) => {let el = document.createElement('div'); el.className = 'task'; el.innerHTML = `<div class="grow"><div class="task-title">${esc(b.name)}</div><div class="task-meta">${esc(b.start)}–${esc(b.end)} · ${duration(Math.max(0, timeMinutes(b.end) - timeMinutes(b.start)))}</div></div><button class="iconbtn danger">Remove</button>`; el.querySelector('button').onclick = () => {state.busy[selectedDate].splice(i, 1); save(); renderAll()}; list.append(el)}); if (!(state.busy[selectedDate] || []).length) list.innerHTML = '<div class="small muted">No commitments added for this day.</div>'}
+    function clearTaskForm() {editingTask = null; $('taskForm').reset(); $('taskDate').value = selectedDate; $('taskMinutes').value = 45; $('saveTaskBtn').textContent = 'Add task'; $('cancelEdit').hidden = true; $('editHint').textContent = ''}
+    function editTask(t) {editingTask = t; $('taskName').value = t.name; $('taskCategory').value = t.category; $('taskPriority').value = t.priority; $('taskDate').value = t.date; $('taskMinutes').value = t.minutes; $('taskNotes').value = t.notes || ''; $('saveTaskBtn').textContent = 'Save changes'; $('cancelEdit').hidden = false; $('editHint').textContent = 'Editing task'; setView('planner'); window.scrollTo({top: 0, behavior: 'smooth'})}
+    $('taskForm').onsubmit = e => {e.preventDefault(); let t = {id: editingTask?.id || uid(), name: $('taskName').value.trim(), category: $('taskCategory').value, priority: Number($('taskPriority').value), date: $('taskDate').value, minutes: Number($('taskMinutes').value), notes: $('taskNotes').value.trim()}; if (!t.name || !t.date) return; if (editingTask) {state.tasks = state.tasks.map(x => x.id === editingTask.id ? t : x)} else state.tasks.push(t); selectedDate = t.date; $('planDate').value = selectedDate; save(); clearTaskForm(); renderAll()};
+    $('cancelEdit').onclick = clearTaskForm;
+    $('planDate').onchange = e => {selectedDate = e.target.value || todayISO(); renderAll()}; $('taskSearch').oninput = renderPlanner; document.querySelectorAll('#taskFilters button').forEach(b => b.onclick = () => {taskFilter = b.dataset.filter; document.querySelectorAll('#taskFilters button').forEach(x => x.classList.toggle('active', x === b)); renderPlanner()});
+    $('availableHours').onchange = () => {dayData(selectedDate).availableHours = Number($('availableHours').value); save(); renderAll()}; $('bufferHours').onchange = () => {dayData(selectedDate).bufferHours = Number($('bufferHours').value); save(); renderAll()};
+    $('addBusy').onclick = () => {let name = $('busyName').value.trim(), start = $('busyStart').value, end = $('busyEnd').value; if (!name || !start || !end || timeMinutes(end) <= timeMinutes(start)) {alert('Enter a name and a valid start/end time. Overnight commitments should be split across dates.'); return } state.busy[selectedDate] = state.busy[selectedDate] || []; state.busy[selectedDate].push({id: uid(), name, start, end}); $('busyName').value = ''; save(); renderAll()};
+    $('autoPlan').onclick = () => {let ts = tasksFor(selectedDate).filter(t => !taskComplete(t)).sort((a, b) => b.priority - a.priority), busy = state.busy[selectedDate] || [], start = 9 * 60, avail = Number($('availableHours').value) * 60, buff = Number($('bufferHours').value) * 60, used = busy.reduce((a, b) => a + Math.max(0, timeMinutes(b.end) - timeMinutes(b.start)), 0), capacity = Math.max(0, avail - buff - used), alloc = {}; let cursor = start; for (let b of busy.sort((a, b) => timeMinutes(a.start) - timeMinutes(b.start))) {if (cursor + capacity <= timeMinutes(b.start)) break; if (cursor < timeMinutes(b.start)) {/* keep schedule estimates simple; busy time is removed from total capacity */} } let remaining = capacity; for (let t of ts) {if (remaining <= 0) break; let m = Math.min(Number(t.minutes), remaining); alloc[t.id] = {minutes: m, slot: `${String(Math.floor(cursor / 60)).padStart(2, '0')}:${String(cursor % 60).padStart(2, '0')}`}; cursor += m; remaining -= m; if (cursor % 1440 === 0) cursor = 0} dayData(selectedDate).allocations = alloc; save(); renderPlanner(); $('allocationSummary').insertAdjacentHTML('beforeend', `<div class="notice">Allocated estimates by priority. Total capacity used: ${duration(capacity - remaining)}. Review actual class/busy times and move any task that doesn't fit.</div>`);};
+    $('prevDay').onclick = () => {selectedDate = dateOffset(selectedDate, -1); renderAll()}; $('nextDay').onclick = () => {selectedDate = dateOffset(selectedDate, 1); renderAll()}; $('todayBtn').onclick = () => {selectedDate = todayISO(); renderAll()};
+    function roadmapItems() {let arr = []; state.roadmap.forEach(p => {p.groups.forEach(g => g.tasks.forEach(t => arr.push({id: t.id, phase: p.phase, phaseTitle: p.title, group: g.title, title: t.title, custom: !!t.custom, topic: t, groupObj: g, phaseObj: p}))); arr.push({id: p.projectId || ('project-' + p.phase), phase: p.phase, phaseTitle: p.title, group: 'Project', title: p.project, project: true, custom: !!p.projectCustom, phaseObj: p})}); return arr}
+    function renderRoadmap() {
+      let all = roadmapItems(), isDone = x => !!(state.roadDone && state.roadDone[x.id]), done = all.filter(isDone).length;
+      $('roadDone').textContent = (all.length ? Math.round(done / all.length * 100) : 0) + '%'; $('roadCount').textContent = done + '/' + all.length;
+      $('projectCount').textContent = state.roadmap.filter(p => !!(state.roadDone && state.roadDone[p.projectId || ('project-' + p.phase)])).length + '/' + state.roadmap.length;
+      $('customCount').textContent = state.roadmap.reduce((n, p) => n + p.groups.reduce((m, g) => m + g.tasks.filter(t => t.custom).length, 0) + (p.projectCustom ? 1 : 0), 0);
+      let q = $('roadmapSearch').value.toLowerCase(), f = $('roadmapFilter').value, root = $('roadmapList'); root.replaceChildren();
+      state.roadmap.forEach(p => {
+        let items = all.filter(x => x.phase === p.phase && (!q || x.title.toLowerCase().includes(q) || String(x.group || '').toLowerCase().includes(q)) && (f === 'all' || (f === 'done') === isDone(x))); if (!items.length && q) return;
+        let phaseTopics = p.groups.flatMap(g => g.tasks), phaseDone = phaseTopics.filter(t => state.roadDone && state.roadDone[t.id]).length, d = document.createElement('details'); d.className = 'phase'; d.open = !!q || p.phase === 1; let summary = document.createElement('summary'); summary.innerHTML = `<span class="badge">${String(p.phase).padStart(2, '0')}</span><strong>${esc(p.title)}</strong><span class="muted small">${phaseDone}/${phaseTopics.length}</span><button class="iconbtn" data-edit-phase type="button">Edit phase</button>`; summary.querySelector('[data-edit-phase]').onclick = e => {e.preventDefault(); e.stopPropagation(); openPhaseModal(p)}; d.append(summary);
+        let body = document.createElement('div'); body.className = 'phasebody'; body.innerHTML = `<div class="muted small" style="margin:0 0 10px">${esc(p.sub || '')}</div>`;
+        p.groups.forEach(g => {
+          let matching = g.tasks.filter(t => items.some(it => it.id === t.id)); if (!matching.length && (q || f !== 'all')) return; let section = document.createElement('div'); section.className = 'card'; section.style.cssText = 'padding:10px;margin:8px 0;background:#ffffff02;box-shadow:none'; let head = document.createElement('div'); head.className = 'row between wrap'; head.innerHTML = `<strong>${esc(g.title)}</strong><div class="row"><button class="iconbtn" data-edit-group>Edit section</button><button class="iconbtn" data-add-topic>+ Topic</button><button class="iconbtn danger" data-delete-group title="Delete section">×</button></div>`; head.querySelector('[data-edit-group]').onclick = () => openGroupModal(p, g); head.querySelector('[data-add-topic]').onclick = () => openTopicModal(p, g); head.querySelector('[data-delete-group]').onclick = () => {if (confirm('Delete this section and all its topics?')) {g.tasks.forEach(t => delete state.roadDone[t.id]); p.groups = p.groups.filter(x => x.id !== g.id); save(); renderRoadmap()} }; section.append(head);
+          matching.forEach(t => {let it = items.find(x => x.id === t.id); if (!it) return; let row = document.createElement('div'); row.className = 'task' + (isDone(it) ? ' done' : ''); row.innerHTML = `<input type="checkbox" ${isDone(it) ? 'checked' : ''} aria-label="Complete topic"><div class="grow"><div class="task-title">${esc(t.title)}</div></div><div class="right"><button class="iconbtn" data-edit>Edit</button><button class="iconbtn danger" data-del>×</button></div>`; row.querySelector('input').onchange = e => {state.roadDone = state.roadDone || {}; state.roadDone[it.id] = e.target.checked; save(); renderRoadmap(); renderDashboard()}; row.querySelector('[data-edit]').onclick = () => openTopicModal(p, g, t); row.querySelector('[data-del]').onclick = () => {if (confirm('Delete this topic?')) {g.tasks = g.tasks.filter(x => x.id !== t.id); delete state.roadDone[t.id]; save(); renderRoadmap()} }; section.append(row)});
+          let add = document.createElement('button'); add.className = 'small'; add.textContent = '+ Add topic to ' + g.title; add.onclick = () => openTopicModal(p, g); section.append(add); body.append(section)
+        });
+        let project = items.find(x => x.project), pr = document.createElement('div'); pr.className = 'task' + (project && isDone(project) ? ' done' : ''); pr.innerHTML = `<input type="checkbox" ${project && isDone(project) ? 'checked' : ''} aria-label="Complete project"><div class="grow"><div class="task-title"><strong>Project:</strong> ${esc(p.project)}</div><div class="task-meta">Phase project</div></div><div class="right"><button class="iconbtn" data-edit-project>Edit</button></div>`; pr.querySelector('input').onchange = e => {state.roadDone = state.roadDone || {}; state.roadDone[p.projectId] = e.target.checked; save(); renderRoadmap(); renderDashboard()}; pr.querySelector('[data-edit-project]').onclick = () => openProjectModal(p); body.append(pr);
+        let footer = document.createElement('div'); footer.className = 'row wrap'; footer.innerHTML = '<button class="iconbtn" data-add-section>+ Add section</button>'; footer.querySelector('[data-add-section]').onclick = () => openGroupModal(p); body.append(footer); d.append(body); root.append(d)
+      });
+    }
+    $('roadmapSearch').oninput = renderRoadmap; $('roadmapFilter').onchange = renderRoadmap;
+    function openModal(title, html) {$('modalTitle').textContent = title; $('modalBody').innerHTML = html; $('modal').style.display = 'block'}
+    $('modalClose').onclick = () => $('modal').style.display = 'none'; $('modal').onclick = e => {if (e.target === $('modal')) $('modal').style.display = 'none'};
+    function openPhaseModal(p) {openModal('Customize phase', `<form id="phaseForm" class="stack"><div><label>Phase title</label><input id="phaseTitle" required maxlength="180" value="${esc(p.title)}"></div><div><label>Short description</label><input id="phaseSub" maxlength="220" value="${esc(p.sub || '')}"></div><button class="primary">Save phase</button></form>`); $('phaseForm').onsubmit = e => {e.preventDefault(); p.title = $('phaseTitle').value.trim(); p.sub = $('phaseSub').value.trim(); save(); $('modal').style.display = 'none'; renderRoadmap()}}
+    function openGroupModal(p, g = null) {openModal(g ? 'Edit section' : 'Add section', `<form id="groupForm" class="stack"><div><label>Section name</label><input id="groupTitle" required maxlength="120" value="${esc(g?.title || '')}"></div><button class="primary">Save section</button></form>`); $('groupForm').onsubmit = e => {e.preventDefault(); let title = $('groupTitle').value.trim(); if (g) g.title = title; else p.groups.push({id: 'group-' + uid(), title, tasks: []}); save(); $('modal').style.display = 'none'; renderRoadmap()}}
+    function openTopicModal(p, g, t = null) {openModal(t ? 'Edit topic' : 'Add topic', `<form id="topicForm" class="stack"><div><label>Topic name</label><input id="topicTitle" required maxlength="180" value="${esc(t?.title || '')}"></div><div><label>Section</label><select id="topicGroup">${p.groups.map(x => `<option value="${esc(x.id)}" ${x.id === g.id ? 'selected' : ''}>${esc(x.title)}</option>`).join('')}</select></div><button class="primary">Save topic</button></form>`); $('topicForm').onsubmit = e => {e.preventDefault(); let title = $('topicTitle').value.trim(), target = p.groups.find(x => x.id === $('topicGroup').value) || g; if (t) {if (target.id !== g.id) {g.tasks = g.tasks.filter(x => x.id !== t.id); target.tasks.push(t)} t.title = title} else target.tasks.push({id: 'topic-' + uid(), title, custom: true}); save(); $('modal').style.display = 'none'; renderRoadmap()}}
+    function openProjectModal(p) {openModal('Edit phase project', `<form id="projectForm" class="stack"><div><label>Project title</label><input id="projectTitle" required maxlength="220" value="${esc(p.project || '')}"></div><button class="primary">Save project</button></form>`); $('projectForm').onsubmit = e => {e.preventDefault(); p.project = $('projectTitle').value.trim(); p.projectCustom = true; save(); $('modal').style.display = 'none'; renderRoadmap()}}
+    $('addRoadmapBtn').onclick = () => {openModal('Add roadmap item', `<form id="quickRoadForm" class="stack"><div><label>What would you like to add?</label><select id="quickType"><option value="topic">Topic</option><option value="section">Section</option><option value="project">Project</option></select></div><div><label>Phase</label><select id="quickPhase">${state.roadmap.map(p => `<option value="${p.phase}">${p.phase}. ${esc(p.title)}</option>`).join('')}</select></div><div id="quickSectionWrap"><label>Section</label><select id="quickSection"></select></div><div><label>Name</label><input id="quickTitle" required maxlength="220"></div><button class="primary">Add to roadmap</button></form>`); let fill = () => {let p = state.roadmap.find(x => x.phase === Number($('quickPhase').value)); $('quickSection').innerHTML = p.groups.map(g => `<option value="${g.id}">${esc(g.title)}</option>`).join(''); $('quickSectionWrap').style.display = $('quickType').value === 'topic' ? 'block' : 'none'}; $('quickPhase').onchange = fill; $('quickType').onchange = () => {fill(); $('quickSectionWrap').style.display = $('quickType').value === 'topic' ? 'block' : 'none'}; fill(); $('quickRoadForm').onsubmit = e => {e.preventDefault(); let p = state.roadmap.find(x => x.phase === Number($('quickPhase').value)), title = $('quickTitle').value.trim(), type = $('quickType').value; if (type === 'topic') {let g = p.groups.find(x => x.id === $('quickSection').value) || p.groups[0]; if (!g) {g = {id: 'group-' + uid(), title: 'Custom section', tasks: []}; p.groups.push(g)} g.tasks.push({id: 'topic-' + uid(), title, custom: true})} else if (type === 'section') p.groups.push({id: 'group-' + uid(), title, tasks: []}); else {p.project = title; p.projectCustom = true} save(); $('modal').style.display = 'none'; renderRoadmap()}};
+    function renderCalendar() {let y = calendarMonth.getFullYear(), m = calendarMonth.getMonth(); $('monthTitle').textContent = calendarMonth.toLocaleDateString(undefined, {month: 'long', year: 'numeric'}); let root = $('calendarGrid'); root.replaceChildren();['S', 'M', 'T', 'W', 'T', 'F', 'S'].forEach(x => {let h = document.createElement('div'); h.className = 'dayhead'; h.textContent = x; root.append(h)}); let first = new Date(y, m, 1).getDay(), days = new Date(y, m + 1, 0).getDate(); for (let i = 0; i < first; i++) {let e = document.createElement('div'); root.append(e)} for (let n = 1; n <= days; n++) {let d = `${y}-${String(m + 1).padStart(2, '0')}-${String(n).padStart(2, '0')}`, s = dailyStats(d), el = document.createElement('button'); el.className = 'day' + (d === todayISO() ? ' today' : '') + (s.total && s.percent < state.settings.threshold && d < todayISO() ? ' missed' : ''); el.innerHTML = `${n}${s.total ? `<div class="dot" style="background:${s.percent >= state.settings.threshold ? 'var(--mint)' : 'var(--red)'}"></div><div>${s.percent}%</div>` : ''}`; el.onclick = () => {selectedDate = d; setView('planner'); renderAll()}; root.append(el)} let st = streakData(), qual = st.qualified; $('bestStreak').textContent = st.best; $('activeDays').textContent = qual.length; let vals = Array.from({length: days}, (_, i) => dailyStats(`${y}-${String(m + 1).padStart(2, '0')}-${String(i + 1).padStart(2, '0')}`)).filter(s => s.total); $('monthAvg').textContent = (vals.length ? Math.round(vals.reduce((a, s) => a + s.percent, 0) / vals.length) : 0) + '%'}
+    $('monthPrev').onclick = () => {calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() - 1, 1); renderCalendar()}; $('monthNext').onclick = () => {calendarMonth = new Date(calendarMonth.getFullYear(), calendarMonth.getMonth() + 1, 1); renderCalendar()};
+    function renderSettings() {let s = state.settings; $('setHours').value = s.hours; $('setBuffer').value = s.buffer; $('setThreshold').value = s.threshold; $('setSleep').value = s.sleep; $('setWater').value = s.water; $('setCoding').value = s.coding; let d = dayData(selectedDate); $('sleepActual').value = d.sleep; $('waterActual').value = d.water || 0; $('mealChecks').replaceChildren(); Object.keys(d.meals).forEach(meal => {let row = document.createElement('label'); row.className = 'task'; row.innerHTML = `<input type="checkbox" ${d.meals[meal] ? 'checked' : ''}><span class="task-title">${meal}</span>`; row.querySelector('input').onchange = e => {d.meals[meal] = e.target.checked; save(); renderDashboard()}; $('mealChecks').append(row)})}
+    $('saveSettings').onclick = () => {state.settings = {hours: Number($('setHours').value), buffer: Number($('setBuffer').value), threshold: Number($('setThreshold').value), sleep: Number($('setSleep').value), water: Number($('setWater').value), coding: Number($('setCoding').value)}; save(); renderAll(); alert('Settings saved.')};
+    $('saveEssentials').onclick = () => {let d = dayData(selectedDate); d.sleep = $('sleepActual').value === '' ? '' : Number($('sleepActual').value); d.water = Number($('waterActual').value) || 0; save(); renderAll(); alert('Daily essentials saved.')};
+    function renderAll() {renderDashboard(); renderPlanner(); renderSettings(); if ($('roadmap').classList.contains('active')) renderRoadmap(); if ($('calendar').classList.contains('active')) renderCalendar()}
+    function exportData() {let blob = new Blob([JSON.stringify({app: 'Detox Life', version: 2, exportedAt: new Date().toISOString(), state}, null, 2)], {type: 'application/json'}), a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = 'detox-life-backup-' + todayISO() + '.json'; a.click(); URL.revokeObjectURL(a.href)}
+    function importData(file) {let r = new FileReader(); r.onload = () => {try {let obj = JSON.parse(r.result); if (!obj.state || !obj.state.settings || !Array.isArray(obj.state.tasks)) throw Error('Invalid backup'); if (confirm('Import will replace the current Dayforge data. Continue?')) {state = obj.state; ensure(); save(); renderAll(); alert('Backup imported.')} } catch (e) {alert('Could not import this file: ' + e.message)} }; r.readAsText(file)}
+    $('exportBtn').onclick = $('exportBtn2').onclick = exportData; $('importBtn').onclick = $('importBtn2').onclick = () => $('importFile').click(); $('importFile').onchange = e => {if (e.target.files[0]) importData(e.target.files[0]); e.target.value = ''};
+    $('clearData').onclick = () => {if (confirm('Delete all saved Detox Life data from this browser? Export a backup first if needed.')) {localStorage.removeItem(KEY); state = defaults(); selectedDate = todayISO(); save(); renderAll()} };
+    $('settingsBtn').onclick = () => setView('settings');
+    $('availableHours').addEventListener('change', () => {dayData(selectedDate).availableHours = Number($('availableHours').value); save()});
+    $('bufferHours').addEventListener('change', () => {dayData(selectedDate).bufferHours = Number($('bufferHours').value); save()});
+    renderAll();
+
+    // PWA enhancement: does not alter Detox Life's existing localStorage keys or data schema.
+    (function setupPWA() {
+      const installButton = document.getElementById('installAppBtn');
+      const installStatus = document.getElementById('installStatus');
+      let installPrompt = null;
+      const isStandalone = () =>
+        window.matchMedia('(display-mode: standalone)').matches ||
+        window.navigator.standalone === true;
+
+      function setInstalledUI() {
+        installButton.textContent = '✓ App Installed';
+        installButton.disabled = true;
+        installButton.hidden = false;
+        installStatus.textContent = 'Available from your Home Screen.';
+      }
+
+      if (isStandalone()) {
+        setInstalledUI();
+      } else {
+        installButton.hidden = false;
+        installButton.disabled = false;
+        installStatus.textContent = 'Tap for install options; availability depends on your browser.';
+      }
+
+      window.addEventListener('beforeinstallprompt', event => {
+        event.preventDefault();
+        installPrompt = event;
+        if (!isStandalone()) {
+          installButton.disabled = false;
+          installButton.textContent = '⇩ Install App';
+          installStatus.textContent = 'Ready to install.';
+        }
+      });
+
+      installButton.addEventListener('click', async () => {
+        if (isStandalone()) {
+          setInstalledUI();
+          return;
+        }
+        if (installPrompt) {
+          installPrompt.prompt();
+          const choice = await installPrompt.userChoice;
+          if (choice && choice.outcome === 'accepted') {
+            installStatus.textContent = 'Installation accepted. Waiting for browser confirmation…';
+          } else {
+            installStatus.textContent = 'Installation was cancelled.';
+          }
+          installPrompt = null;
+          installButton.disabled = true;
+          return;
+        }
+        const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent) ||
+          (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+        installStatus.textContent = isIOS
+          ? 'On iPhone/iPad: open this site in Safari, tap Share, then Add to Home Screen.'
+          : 'Installation is not currently offered. Use your browser menu’s Install app or Add to Home screen option, and ensure this site is served over HTTPS.';
+      });
+
+      window.addEventListener('appinstalled', () => {
+        installPrompt = null;
+        setInstalledUI();
+      });
+
+      // Service workers require HTTPS or localhost; file:// use remains supported as a regular HTML app.
+      if ('serviceWorker' in navigator && (location.protocol === 'https:' || location.hostname === 'localhost' || location.hostname === '127.0.0.1')) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('./service-worker.js', {scope: './'})
+            .then(() => {
+              if (navigator.onLine) installStatus.dataset.pwa = 'ready';
+            })
+            .catch(() => {
+              installStatus.textContent = 'Offline support could not be enabled in this browser session.';
+            });
+        });
+      }
+      window.addEventListener('online', () => {
+        if (!installPrompt && !isStandalone() && installStatus.textContent.startsWith('Offline')) {
+          installStatus.textContent = 'Back online.';
+        }
+      });
+    })();
+
+  </script>
+</body>
+
+</html>
